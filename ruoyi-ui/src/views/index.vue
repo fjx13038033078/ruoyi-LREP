@@ -96,7 +96,6 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      venueCourtMapData: {}, // 存储场馆场地数量映射的数据
       // 查询参数
       queryParams: {
         pageNum: 1,
