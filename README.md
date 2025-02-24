@@ -1,5 +1,5 @@
 
-# APE（Ancient Poetry Exchange的缩写）
+# LREP（Learning resource exchange platform的缩写）
 
 ## 内置功能
 
