@@ -30,7 +30,13 @@ public class Purchase implements Serializable {
 
     private Long userId;
 
+    @TableField(exist = false)
+    private String username;
+
     private Long courseId;
+
+    @TableField(exist = false)
+    private String courseName;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime purchaseTime;

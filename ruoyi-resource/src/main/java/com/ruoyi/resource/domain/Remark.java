@@ -17,24 +17,28 @@ import java.time.LocalDateTime;
  * @Author 范佳兴
  * @date 2025/2/24 16:43
  */
-@TableName("lerp_comment")
+@TableName("lerp_remark")
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-public class Comment implements Serializable {
+public class Remark implements Serializable {
 
     @TableId(type = IdType.AUTO)
-    private Long commentId;
+    private Long remarkId;
 
     private Long userId;
+
+    //用户名
+    @TableField(exist = false)
+    private String username;
 
     private Long resourceId;
 
     private String content;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime commentTime;
+    private LocalDateTime remarkTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

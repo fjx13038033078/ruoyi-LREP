@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.resource.mapper.RemarkMapper">
+
+    <!-- 定义结果映射 -->
+    <resultMap type="com.ruoyi.resource.domain.Remark" id="RemarkResult">
+        <id property="remarkId" column="remark_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="resourceId" column="resource_id"/>
+        <result property="content" column="content"/>
+        <result property="remarkTime" column="remark_time"/>
+    </resultMap>
+
+    <!-- 获取所有评论 -->
+    <select id="getAllRemarks" resultMap="RemarkResult">
+        SELECT * FROM  lerp_remark
+    </select>
+
+    <!-- 根据资源ID获取评论列表 -->
+    <select id="listRemarksByResourceId" parameterType="Long" resultMap="RemarkResult">
+        SELECT * FROM  lerp_remark WHERE resource_id = #{resourceId}
+    </select>
+
+    <!-- 根据评论ID获取评论 -->
+    <select id="getRemarkById" parameterType="Long" resultMap="RemarkResult">
+        SELECT * FROM  lerp_remark WHERE remark_id = #{remarkId}
+    </select>
+
+    <!-- 添加评论 -->
+    <insert id="addRemark" parameterType="com.ruoyi.resource.domain.Remark">
+        INSERT INTO  lerp_remark (user_id, resource_id, content, remark_time)
+        VALUES (#{userId}, #{resourceId}, #{content}, #{remarkTime})
+    </insert>
+
+    <!-- 删除评论 -->
+    <delete id="deleteRemark" parameterType="Long">
+        DELETE FROM lerp_remark WHERE remark_id = #{remarkId}
+    </delete>
+
+</mapper>

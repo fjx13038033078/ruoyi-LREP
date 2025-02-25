@@ -29,6 +29,9 @@ public class Favorite implements Serializable {
 
     private Long resourceId;
 
+    @TableField(exist = false)
+    private String resourceName;
+
     private Long userId;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
