@@ -2,6 +2,7 @@ package com.ruoyi.resource.mapper;
 
 import com.ruoyi.resource.domain.Favorite;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -25,6 +26,23 @@ public interface FavoriteMapper {
      * @return 收藏详情
      */
     Favorite getFavoriteById(Long favoriteId);
+
+    /**
+     * 根据用户ID获取收藏列表
+     *
+     * @param userId 用户ID
+     * @return 收藏列表
+     */
+    List<Favorite> listFavoritesByUserId(Long userId);
+
+    /**
+     * 根据用户ID和资源ID查找收藏
+     *
+     * @param userId     用户ID
+     * @param resourceId 资源ID
+     * @return 收藏对象
+     */
+    Favorite findFavoriteByUserIdAndResourceId(@Param("userId") Long userId, @Param("resourceId") Long resourceId);
 
     /**
      * 添加收藏

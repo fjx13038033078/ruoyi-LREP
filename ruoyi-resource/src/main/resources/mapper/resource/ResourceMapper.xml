@@ -10,7 +10,7 @@
         <result property="resourceName" column="resource_name"/>
         <result property="description" column="description"/>
         <result property="userId" column="user_id"/>
-        <result property="filePath" column="file_path"/>
+        <result property="fileName" column="file_name"/>
     </resultMap>
 
     <!-- 获取所有资源 -->
@@ -25,8 +25,8 @@
 
     <!-- 添加资源 -->
     <insert id="addResource" parameterType="com.ruoyi.resource.domain.Resource">
-        INSERT INTO lerp_resource (resource_name, description, user_id, file_path)
-        VALUES (#{resourceName}, #{description}, #{userId}, #{filePath})
+        INSERT INTO lerp_resource (resource_name, description, user_id, file_name)
+        VALUES (#{resourceName}, #{description}, #{userId}, #{fileName})
     </insert>
 
     <!-- 更新资源 -->
@@ -36,7 +36,7 @@
             resource_name = #{resourceName},
             description = #{description},
             user_id = #{userId},
-            file_path = #{filePath}
+            file_name = #{fileName}
         WHERE resource_id = #{resourceId}
     </update>
 

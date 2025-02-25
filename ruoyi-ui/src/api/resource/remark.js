@@ -1,10 +1,20 @@
 import request from '@/utils/request'
 
 // 获取所有评论列表
-export function listAllRemarks() {
+export function listAllRemarks(query) {
   return request({
     url: '/lerp/remark/listAll',
-    method: 'get'
+    method: 'get',
+    params: query
+  })
+}
+
+// 获取评论列表
+export function listRemarksByResourceId(resourceId) {
+  return request({
+    url: '/lerp/remark/list',
+    method: 'get',
+    params: { resourceId }
   })
 }
 

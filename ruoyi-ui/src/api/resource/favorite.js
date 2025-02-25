@@ -1,10 +1,11 @@
 import request from '@/utils/request'
 
 // 获取收藏列表
-export function listAllFavorites() {
+export function listAllFavorites(query) {
   return request({
     url: '/lerp/favorite/listAll',
-    method: 'get'
+    method: 'get',
+    params: query
   })
 }
 

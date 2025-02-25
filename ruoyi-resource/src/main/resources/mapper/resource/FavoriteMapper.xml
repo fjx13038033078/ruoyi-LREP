@@ -22,6 +22,18 @@
         SELECT * FROM lerp_favorite WHERE favorite_id = #{favoriteId}
     </select>
 
+    <!-- 根据用户ID获取收藏列表 -->
+    <select id="listFavoritesByUserId" parameterType="Long" resultMap="FavoriteResult">
+        SELECT * FROM lerp_favorite WHERE user_id = #{userId}
+    </select>
+
+    <select id="findFavoriteByUserIdAndResourceId" resultMap="FavoriteResult">
+        SELECT * FROM lerp_favorite
+        WHERE user_id = #{userId} AND resource_id = #{resourceId}
+            LIMIT 1
+    </select>
+
+
     <!-- 添加收藏 -->
     <insert id="addFavorite" parameterType="com.ruoyi.resource.domain.Favorite">
         INSERT INTO lerp_favorite (resource_id, user_id, favorite_time)

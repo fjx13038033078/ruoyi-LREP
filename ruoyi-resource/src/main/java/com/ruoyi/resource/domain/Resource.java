@@ -31,7 +31,10 @@ public class Resource implements Serializable {
 
     private Long userId;
 
-    private String filePath;
+    @TableField(exist = false)
+    private String userName;
+
+    private String fileName;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

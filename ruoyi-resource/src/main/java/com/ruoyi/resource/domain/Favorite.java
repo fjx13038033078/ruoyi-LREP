@@ -34,6 +34,9 @@ public class Favorite implements Serializable {
 
     private Long userId;
 
+    @TableField(exist = false)
+    private String userName;
+
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime favoriteTime;
 

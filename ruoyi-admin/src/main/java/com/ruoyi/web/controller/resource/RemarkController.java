@@ -33,6 +33,12 @@ public class RemarkController extends BaseController {
         return getDataTable(remarks);
     }
 
+    @GetMapping("/list")
+    public AjaxResult listRemarksByResourceId(@RequestParam Long resourceId) {
+        List<Remark> remarks = remarkService.listRemarksByResourceId(resourceId);
+        return success(remarks);
+    }
+
     /**
      * 添加评论
      *

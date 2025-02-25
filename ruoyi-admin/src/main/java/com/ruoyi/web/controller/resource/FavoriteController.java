@@ -29,7 +29,6 @@ public class FavoriteController extends BaseController {
      */
     @GetMapping("/listAll")
     public TableDataInfo listAllFavorites() {
-        startPage();
         List<Favorite> favorites = favoriteService.getAllFavorites();
         return getDataTable(favorites);
     }

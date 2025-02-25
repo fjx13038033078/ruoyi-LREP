@@ -1,8 +1,10 @@
 package com.ruoyi.resource.service.impl;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.resource.domain.Resource;
 import com.ruoyi.resource.mapper.ResourceMapper;
 import com.ruoyi.resource.service.ResourceService;
+import com.ruoyi.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ public class ResourceServiceImpl implements ResourceService {
 
     private final ResourceMapper resourceMapper;
 
+    private final ISysUserService iSysUserService;
+
     /**
      * 获取所有资源
      *
@@ -26,7 +30,9 @@ public class ResourceServiceImpl implements ResourceService {
      */
     @Override
     public List<Resource> getAllResources() {
-        return resourceMapper.getAllResources();
+        List<Resource> allResources = resourceMapper.getAllResources();
+        fillResourceInfo(allResources);
+        return allResources;
     }
 
     /**
@@ -48,6 +54,8 @@ public class ResourceServiceImpl implements ResourceService {
      */
     @Override
     public boolean addResource(Resource resource) {
+        Long userId = SecurityUtils.getUserId();
+        resource.setUserId(userId);
         int rows = resourceMapper.addResource(resource);
         return rows > 0;
     }
@@ -74,5 +82,18 @@ public class ResourceServiceImpl implements ResourceService {
     public boolean deleteResource(Long resourceId) {
         int rows = resourceMapper.deleteResource(resourceId);
         return rows > 0;
+    }
+
+    /**
+     * 填充资源信息，包括用户名
+     *
+     * @param resources 资源列表
+     */
+    private void fillResourceInfo(List<Resource> resources) {
+        for (Resource resource : resources) {
+            Long userId = resource.getUserId();
+            String nickName = iSysUserService.selectUserById(userId).getNickName();
+            resource.setUserName(nickName);
+        }
     }
 }

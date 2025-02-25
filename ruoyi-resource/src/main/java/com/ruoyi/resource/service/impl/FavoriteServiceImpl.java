@@ -1,13 +1,19 @@
 package com.ruoyi.resource.service.impl;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.resource.domain.Favorite;
 import com.ruoyi.resource.mapper.FavoriteMapper;
 import com.ruoyi.resource.service.FavoriteService;
+import com.ruoyi.system.service.ISysRoleService;
+import com.ruoyi.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.ruoyi.common.utils.PageUtils.startPage;
 
 /**
  * @Author 范佳兴
@@ -19,6 +25,12 @@ import java.util.List;
 public class FavoriteServiceImpl implements FavoriteService {
     private final FavoriteMapper favoriteMapper;
 
+    private final ResourceServiceImpl resourceService;
+
+    private final ISysUserService iSysUserService;
+
+    private final ISysRoleService iSysRoleService;
+
     /**
      * 获取所有收藏
      *
@@ -26,7 +38,19 @@ public class FavoriteServiceImpl implements FavoriteService {
      */
     @Override
     public List<Favorite> getAllFavorites() {
-        return favoriteMapper.getAllFavorites();
+        Long userId = SecurityUtils.getUserId();
+        String role = iSysRoleService.selectStringRoleByUserId(userId);
+        if (role.equals("admin")) {
+            startPage();
+            List<Favorite> allFavorites = favoriteMapper.getAllFavorites();
+            fillFavoriteDetails(allFavorites);
+            return allFavorites;
+        } else {
+            startPage();
+            List<Favorite> favorites = favoriteMapper.listFavoritesByUserId(userId);
+            fillFavoriteDetails(favorites);
+            return favorites;
+        }
     }
 
     /**
@@ -48,8 +72,16 @@ public class FavoriteServiceImpl implements FavoriteService {
      */
     @Override
     public boolean addFavorite(Favorite favorite) {
-        int rows = favoriteMapper.addFavorite(favorite);
-        return rows > 0;
+        Long userId = SecurityUtils.getUserId();
+        favorite.setUserId(userId);
+        Favorite existingFavorite = favoriteMapper.findFavoriteByUserIdAndResourceId(userId, favorite.getResourceId());
+        if (existingFavorite != null) {
+            throw new RuntimeException("您已收藏该资源，无需重复收藏！");
+        } else {
+            favorite.setFavoriteTime(LocalDateTime.now());
+            int rows = favoriteMapper.addFavorite(favorite);
+            return rows > 0;
+        }
     }
 
     /**
@@ -74,5 +106,18 @@ public class FavoriteServiceImpl implements FavoriteService {
     public boolean deleteFavorite(Long favoriteId) {
         int rows = favoriteMapper.deleteFavorite(favoriteId);
         return rows > 0;
+    }
+
+    /**
+     * 填充收藏详情，包括资源名称和用户名
+     *
+     * @param favorites 收藏列表
+     */
+    private void fillFavoriteDetails(List<Favorite> favorites) {
+        for (Favorite favorite : favorites) {
+            Long resourceId = favorite.getResourceId();
+            favorite.setResourceName(resourceService.getResourceById(resourceId).getResourceName());
+            favorite.setUserName(iSysUserService.selectUserById(favorite.getUserId()).getNickName());
+        }
     }
 }
