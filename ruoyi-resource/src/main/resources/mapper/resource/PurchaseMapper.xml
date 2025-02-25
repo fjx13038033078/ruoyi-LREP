@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.resource.mapper.PurchaseMapper">
+
+    <!-- 定义结果映射 -->
+    <resultMap type="com.ruoyi.resource.domain.Purchase" id="PurchaseResult">
+        <id property="purchaseId" column="purchase_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="purchaseTime" column="purchase_time"/>
+    </resultMap>
+
+    <!-- 获取所有课程购买记录 -->
+    <select id="getAllPurchases" resultMap="PurchaseResult">
+        SELECT * FROM lerp_purchase
+    </select>
+
+    <!-- 根据购买记录ID获取课程购买记录 -->
+    <select id="getPurchaseById" parameterType="Long" resultMap="PurchaseResult">
+        SELECT * FROM lerp_purchase WHERE purchase_id = #{purchaseId}
+    </select>
+
+    <!-- 添加课程购买记录 -->
+    <insert id="addPurchase" parameterType="com.ruoyi.resource.domain.Purchase">
+        INSERT INTO lerp_purchase (user_id, course_id, purchase_time)
+        VALUES (#{userId}, #{courseId}, #{purchaseTime})
+    </insert>
+
+    <!-- 更新课程购买记录 -->
+    <update id="updatePurchase" parameterType="com.ruoyi.resource.domain.Purchase">
+        UPDATE lerp_purchase
+        SET
+            user_id = #{userId},
+            course_id = #{courseId},
+            purchase_time = #{purchaseTime}
+        WHERE purchase_id = #{purchaseId}
+    </update>
+
+    <!-- 删除课程购买记录 -->
+    <delete id="deletePurchase" parameterType="Long">
+        DELETE FROM lerp_purchase WHERE purchase_id = #{purchaseId}
+    </delete>
+
+</mapper>

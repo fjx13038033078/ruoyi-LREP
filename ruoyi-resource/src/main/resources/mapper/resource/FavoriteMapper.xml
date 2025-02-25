@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.resource.mapper.FavoriteMapper">
+
+    <!-- 定义结果映射 -->
+    <resultMap type="com.ruoyi.resource.domain.Favorite" id="FavoriteResult">
+        <id property="favoriteId" column="favorite_id"/>
+        <result property="resourceId" column="resource_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="favoriteTime" column="favorite_time"/>
+    </resultMap>
+
+    <!-- 获取所有收藏 -->
+    <select id="getAllFavorites" resultMap="FavoriteResult">
+        SELECT * FROM lerp_favorite
+    </select>
+
+    <!-- 根据收藏ID获取收藏详情 -->
+    <select id="getFavoriteById" parameterType="Long" resultMap="FavoriteResult">
+        SELECT * FROM lerp_favorite WHERE favorite_id = #{favoriteId}
+    </select>
+
+    <!-- 添加收藏 -->
+    <insert id="addFavorite" parameterType="com.ruoyi.resource.domain.Favorite">
+        INSERT INTO lerp_favorite (resource_id, user_id, favorite_time)
+        VALUES (#{resourceId}, #{userId}, #{favoriteTime})
+    </insert>
+
+    <!-- 更新收藏 -->
+    <update id="updateFavorite" parameterType="com.ruoyi.resource.domain.Favorite">
+        UPDATE lerp_favorite
+        SET
+            resource_id = #{resourceId},
+            user_id = #{userId},
+            favorite_time = #{favoriteTime}
+        WHERE favorite_id = #{favoriteId}
+    </update>
+
+    <!-- 删除收藏 -->
+    <delete id="deleteFavorite" parameterType="Long">
+        DELETE FROM lerp_favorite WHERE favorite_id = #{favoriteId}
+    </delete>
+
+</mapper>

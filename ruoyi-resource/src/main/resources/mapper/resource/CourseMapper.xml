@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.resource.mapper.CourseMapper">
+
+    <!-- 定义结果映射 -->
+    <resultMap type="com.ruoyi.resource.domain.Course" id="CourseResult">
+        <id property="courseId" column="course_id"/>
+        <result property="courseName" column="course_name"/>
+        <result property="description" column="description"/>
+        <result property="price" column="price"/>
+        <result property="instructor" column="instructor"/>
+    </resultMap>
+
+    <!-- 获取所有课程 -->
+    <select id="getAllCourses" resultMap="CourseResult">
+        SELECT * FROM lerp_course
+    </select>
+
+    <!-- 根据课程ID获取课程详情 -->
+    <select id="getCourseById" parameterType="Long" resultMap="CourseResult">
+        SELECT * FROM lerp_course WHERE course_id = #{courseId}
+    </select>
+
+    <!-- 添加课程 -->
+    <insert id="addCourse" parameterType="com.ruoyi.resource.domain.Course">
+        INSERT INTO lerp_course (course_name, description, price, instructor)
+        VALUES (#{courseName}, #{description}, #{price}, #{instructor})
+    </insert>
+
+    <!-- 更新课程 -->
+    <update id="updateCourse" parameterType="com.ruoyi.resource.domain.Course">
+        UPDATE lerp_course
+        SET
+            course_name = #{courseName},
+            description = #{description},
+            price = #{price},
+            instructor = #{instructor}
+        WHERE course_id = #{courseId}
+    </update>
+
+    <!-- 删除课程 -->
+    <delete id="deleteCourse" parameterType="Long">
+        DELETE FROM lerp_course WHERE course_id = #{courseId}
+    </delete>
+
+</mapper>

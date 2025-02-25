@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.resource.mapper.ResourceMapper">
+
+    <!-- 定义结果映射 -->
+    <resultMap type="com.ruoyi.resource.domain.Resource" id="ResourceResult">
+        <id property="resourceId" column="resource_id"/>
+        <result property="resourceName" column="resource_name"/>
+        <result property="description" column="description"/>
+        <result property="userId" column="user_id"/>
+        <result property="filePath" column="file_path"/>
+    </resultMap>
+
+    <!-- 获取所有资源 -->
+    <select id="getAllResources" resultMap="ResourceResult">
+        SELECT * FROM lerp_resource
+    </select>
+
+    <!-- 根据资源ID获取资源详情 -->
+    <select id="getResourceById" parameterType="Long" resultMap="ResourceResult">
+        SELECT * FROM lerp_resource WHERE resource_id = #{resourceId}
+    </select>
+
+    <!-- 添加资源 -->
+    <insert id="addResource" parameterType="com.ruoyi.resource.domain.Resource">
+        INSERT INTO lerp_resource (resource_name, description, user_id, file_path)
+        VALUES (#{resourceName}, #{description}, #{userId}, #{filePath})
+    </insert>
+
+    <!-- 更新资源 -->
+    <update id="updateResource" parameterType="com.ruoyi.resource.domain.Resource">
+        UPDATE lerp_resource
+        SET
+            resource_name = #{resourceName},
+            description = #{description},
+            user_id = #{userId},
+            file_path = #{filePath}
+        WHERE resource_id = #{resourceId}
+    </update>
+
+    <!-- 删除资源 -->
+    <delete id="deleteResource" parameterType="Long">
+        DELETE FROM lerp_resource WHERE resource_id = #{resourceId}
+    </delete>
+
+</mapper>

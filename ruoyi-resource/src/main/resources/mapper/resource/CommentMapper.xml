@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.resource.mapper.CommentMapper">
+
+    <!-- 定义结果映射 -->
+    <resultMap type="com.ruoyi.resource.domain.Comment" id="CommentResult">
+        <id property="commentId" column="comment_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="resourceId" column="resource_id"/>
+        <result property="content" column="content"/>
+        <result property="commentTime" column="comment_time"/>
+    </resultMap>
+
+    <!-- 获取所有评论 -->
+    <select id="getAllComments" resultMap="CommentResult">
+        SELECT * FROM  lerp_comment
+    </select>
+
+    <!-- 根据评论ID获取评论详情 -->
+    <select id="getCommentById" parameterType="Long" resultMap="CommentResult">
+        SELECT * FROM  lerp_comment WHERE comment_id = #{commentId}
+    </select>
+
+    <!-- 添加评论 -->
+    <insert id="addComment" parameterType="com.ruoyi.resource.domain.Comment">
+        INSERT INTO  lerp_comment (user_id, resource_id, content, comment_time)
+        VALUES (#{userId}, #{resourceId}, #{content}, #{commentTime})
+    </insert>
+
+    <!-- 更新评论 -->
+    <update id="updateComment" parameterType="com.ruoyi.resource.domain.Comment">
+        UPDATE lerp_comment
+        SET
+            user_id = #{userId},
+            resource_id = #{resourceId},
+            content = #{content},
+            comment_time = #{commentTime}
+        WHERE comment_id = #{commentId}
+    </update>
+
+    <!-- 删除评论 -->
+    <delete id="deleteComment" parameterType="Long">
+        DELETE FROM lerp_comment WHERE comment_id = #{commentId}
+    </delete>
+
+</mapper>
