@@ -4,6 +4,7 @@
       <el-table-column label="收藏ID" prop="favoriteId" align="center"></el-table-column>
       <el-table-column label="资源名称" prop="resourceName" align="center"></el-table-column>
       <el-table-column label="收藏时间" prop="favoriteTime" align="center"></el-table-column>
+      <el-table-column label="收藏用户" prop="userName" align="center"></el-table-column>
       <el-table-column label="操作" align="center" width="260px">
         <template #default="scope">
           <el-button type="info" size="mini" @click="handleView(scope.row)">查看资源</el-button>

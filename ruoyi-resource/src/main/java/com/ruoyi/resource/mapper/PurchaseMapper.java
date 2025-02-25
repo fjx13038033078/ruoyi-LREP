@@ -2,6 +2,7 @@ package com.ruoyi.resource.mapper;
 
 import com.ruoyi.resource.domain.Purchase;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -25,6 +26,23 @@ public interface PurchaseMapper {
      * @return 课程购买记录详情
      */
     Purchase getPurchaseById(Long purchaseId);
+
+    /**
+     * 根据用户ID获取课程购买记录
+     *
+     * @param userId 用户ID
+     * @return 课程购买记录列表
+     */
+    List<Purchase> getPurchasesByUserId(Long userId);
+
+    /**
+     * 根据用户ID和课程ID获取课程购买记录
+     *
+     * @param userId 用户ID
+     * @param courseId 课程ID
+     * @return 课程购买记录详情
+     */
+    Purchase findPurchaseByUserIdAndCourseId(@Param("userId")Long userId, @Param("courseId")Long courseId);
 
     /**
      * 添加课程购买记录
