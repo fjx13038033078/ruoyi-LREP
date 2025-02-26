@@ -3,7 +3,7 @@
     <!-- 新增笔记按钮 -->
     <el-row :gutter="20" class="mb-20" style="margin-bottom: 20px;">
       <el-col>
-        <el-button type="primary" @click="handleAdd" v-hasPermi="['note:add']">新增笔记</el-button>
+        <el-button type="primary" @click="handleAdd" v-hasPermi="['resource:note:add']">新增笔记</el-button>
       </el-col>
     </el-row>
 
@@ -18,9 +18,9 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="400" fixed="right">
         <template #default="scope">
-          <el-button type="info" size="mini" @click="handleView(scope.row)">查看</el-button>
-          <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click="handleDelete(scope.row.noteId)">删除</el-button>
+          <el-button type="info" size="mini" @click="handleView(scope.row)" v-hasPermi="['resource:note:view']">查看</el-button>
+          <el-button type="primary" size="mini" @click="handleEdit(scope.row)" v-hasPermi="['resource:note:edit']">编辑</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope.row.noteId)" v-hasPermi="['resource:note:delete']">删除</el-button>
           <el-button type="warning" size="mini" @click="openRemarkDialog(scope.row)">评论</el-button>
         </template>
       </el-table-column>

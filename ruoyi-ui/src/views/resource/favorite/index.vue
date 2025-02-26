@@ -23,7 +23,7 @@
           <el-input v-model="viewResourceForm.description" type="textarea" :rows="3" readonly></el-input>
         </el-form-item>
         <el-form-item label="附件查看">
-          <FileUpload v-model="viewResourceForm.fileName" :is-show-tip="false" :disabled="true"></FileUpload>
+          <FileUpload v-model="viewResourceForm.fileName" :is-show-tip="false" :disabled="true" ></FileUpload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -91,7 +91,7 @@ export default {
         this.viewResourceForm = { ...response.data }
         this.viewDialogVisible = true
       })
-    }
+    },
   }
 };
 </script>

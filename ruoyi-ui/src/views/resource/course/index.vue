@@ -24,6 +24,7 @@
             <el-button type="info" size="mini" @click="handleView(scope.row)">查看详情</el-button>
             <el-button type="warning" size="mini" @click="handleEdit(scope.row)" v-hasPermi="['resource:course:edit']">修改</el-button>
             <el-button type="danger" size="mini" @click="handleDelete(scope.row)" v-hasPermi="['resource:course:delete']">删除</el-button>
+            <el-button type="success" size="mini" @click="handleBuy(scope.row)" v-hasPermi="['resource:course:purchase']">购买</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -85,6 +86,7 @@
 
 <script>
 import { listAllCourses, addCourse, updateCourse, deleteCourse } from '@/api/resource/course';
+import {addPurchase} from "@/api/resource/purchase";
 
 export default {
   data() {
@@ -165,7 +167,23 @@ export default {
           this.fetchCourseList();
         });
       });
-    }
+    },
+    // 新增购买记录
+    handleBuy(row) {
+      this.$confirm(`确认购买课程【${row.courseName}】？`, '确认购买', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        const purchaseData = {
+          courseId: row.courseId,
+          price: row.price,
+        };
+        addPurchase(purchaseData).then(() => {
+          this.$message.success('购买成功');
+        })
+      });
+    },
   }
 };
 </script>
