@@ -66,7 +66,7 @@
           <el-input v-model="viewResourceForm.description" type="textarea" :rows="3" readonly></el-input>
         </el-form-item>
         <el-form-item label="附件查看">
-          <FileUpload v-model="viewResourceForm.fileName" :is-show-tip="false" :disabled="true"></FileUpload>
+          <FileUpload v-model="viewResourceForm.fileName" :is-show-tip="false" :disabled="true" :resource-id="viewResourceForm.resourceId"></FileUpload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

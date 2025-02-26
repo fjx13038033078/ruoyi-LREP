@@ -2,7 +2,7 @@ package com.ruoyi.resource.service.impl;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.resource.domain.Course;
-import com.ruoyi.resource.domain.Favorite;
+
 import com.ruoyi.resource.domain.Purchase;
 import com.ruoyi.resource.mapper.PurchaseMapper;
 import com.ruoyi.resource.service.PurchaseService;
@@ -121,7 +121,7 @@ public class PurchaseServiceImpl implements PurchaseService {
             Course course = courseService.getCourseById(courseId);
             purchase.setCourseName(course.getCourseName());
             Long userId = purchase.getUserId();
-            String username = iSysUserService.selectUserById(userId).getUserName();
+            String username = iSysUserService.selectUserById(userId).getNickName();
             purchase.setUsername(username);
         }
     }

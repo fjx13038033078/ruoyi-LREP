@@ -29,7 +29,7 @@
     <transition-group class="upload-file-list el-upload-list el-upload-list--text" name="el-fade-in-linear" tag="ul">
       <li :key="file.url" class="el-upload-list__item ele-upload-list__item-content" v-for="(file, index) in fileList">
         <el-link :href="`${baseUrl}${file.url}`" :underline="false" target="_blank">
-          <span class="el-icon-document" @click="handleView()"> {{ getFileName(file.name) }} </span>
+          <span class="el-icon-document" @click="handleDownload(file)"> {{ getFileName(file.name) }} </span>
         </el-link>
         <div class="ele-upload-list__item-content-action">
           <el-link :underline="false" @click="handleDelete(index)" type="danger">删除</el-link>
@@ -41,10 +41,15 @@
 
 <script>
 import { getToken } from "@/utils/auth";
+import {addDownload} from "@/api/resource/download";
 
 export default {
   name: "FileUpload",
   props: {
+    resourceId: {
+      type: Number,
+      default: null
+    },
     // 值
     value: [String, Object, Array],
     // 数量限制
@@ -190,8 +195,16 @@ export default {
       }
       return strs != '' ? strs.substr(0, strs.length - 1) : '';
     },
-    handleView(){
-      console.log("handleView")
+    handleDownload(file){
+      const fileName = file.name.split('/').pop();
+      const fileExt = fileName.split('.').pop(); // 获取文件扩展名
+      console.log(fileExt);
+      const fileType = fileExt
+      addDownload({
+        resourceId: this.resourceId,
+        fileName: fileName,
+        type: fileType
+      })
     }
   }
 };

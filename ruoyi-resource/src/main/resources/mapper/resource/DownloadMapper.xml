@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.resource.mapper.DownloadMapper">
+
+    <!-- 定义结果映射 -->
+    <resultMap type="com.ruoyi.resource.domain.Download" id="DownloadResult">
+        <id property="downloadId" column="download_id"/>
+        <result property="resourceId" column="resource_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="type" column="type"/>
+        <result property="downloadTime" column="download_time"/>
+    </resultMap>
+
+    <!-- 获取所有下载记录 -->
+    <select id="getAllDownloads" resultMap="DownloadResult">
+        SELECT * FROM lerp_download
+    </select>
+
+    <!-- 根据下载记录ID获取下载记录 -->
+    <select id="getDownloadById" parameterType="Long" resultMap="DownloadResult">
+        SELECT * FROM lerp_download WHERE download_id = #{downloadId}
+    </select>
+
+    <!-- 根据用户ID获取下载记录 -->
+    <select id="getDownloadsByUserId" parameterType="Long" resultMap="DownloadResult">
+        SELECT * FROM lerp_download WHERE user_id = #{userId}
+    </select>
+
+    <!-- 添加下载记录 -->
+    <insert id="addDownload" parameterType="com.ruoyi.resource.domain.Download">
+        INSERT INTO lerp_download (resource_id, user_id, file_name, type, download_time)
+        VALUES (#{resourceId}, #{userId}, #{fileName}, #{type}, #{downloadTime})
+    </insert>
+
+    <!-- 删除下载记录 -->
+    <delete id="deleteDownload" parameterType="Long">
+        DELETE FROM lerp_download WHERE download_id = #{downloadId}
+    </delete>
+
+</mapper>
