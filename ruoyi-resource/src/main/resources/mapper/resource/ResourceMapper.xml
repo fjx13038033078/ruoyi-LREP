@@ -13,9 +13,15 @@
         <result property="fileName" column="file_name"/>
     </resultMap>
 
-    <!-- 获取所有资源 -->
-    <select id="getAllResources" resultMap="ResourceResult">
+    <!-- 获取所有资源，支持关键词搜索 -->
+    <select id="getAllResources" parameterType="String" resultMap="ResourceResult">
         SELECT * FROM lerp_resource
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (resource_name LIKE concat('%', #{keyword}, '%')
+                OR description LIKE concat('%', #{keyword}, '%'))
+            </if>
+        </where>
     </select>
 
     <!-- 根据资源ID获取资源详情 -->

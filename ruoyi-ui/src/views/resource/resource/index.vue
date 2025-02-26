@@ -2,6 +2,23 @@
   <div class="app-container">
     <!-- 新增资源按钮 -->
     <el-row :gutter="20" class="mb-20" style="margin-bottom: 20px;">
+      <el-col :span="24" :xs="24">
+        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+          <el-form-item label="用户名称" prop="keyword">
+            <el-input
+              v-model="queryParams.keyword"
+              placeholder="请输入关键词"
+              clearable
+              style="width: 240px"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
       <el-col>
         <el-button type="primary" @click="handleAdd" v-hasPermi="['resource:resource:add']">新增资源</el-button>
       </el-col>
@@ -107,11 +124,14 @@ export default {
   data() {
     return {
       loading: true,
+      // 显示搜索条件
+      showSearch: true,
       resourceList: [],
       total: 0,
       queryParams: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        keyword: undefined
       },
       dialogVisible: false,
       dialogTitle: '',
@@ -140,10 +160,19 @@ export default {
     this.fetchResources()
   },
   methods: {
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1
+      this.fetchResources();
+    },
+    resetQuery(){
+      this.queryParams.keyword = ''
+      this.fetchResources()
+    },
     // 获取资源列表
     fetchResources() {
       this.loading = true
-      listAllResources().then(response => {
+      listAllResources(this.queryParams.keyword).then(response => {
         this.resourceList = response.rows
         this.total = response.total
         this.loading = false

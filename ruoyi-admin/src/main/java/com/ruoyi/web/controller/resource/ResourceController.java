@@ -27,9 +27,9 @@ public class ResourceController extends BaseController {
      * @return 资源列表
      */
     @GetMapping("/listAll")
-    public TableDataInfo listAllResources() {
+    public TableDataInfo listAllResources(String keyword) {
         startPage();
-        List<Resource> resources = resourceService.getAllResources();
+        List<Resource> resources = resourceService.getAllResources(keyword);
         return getDataTable(resources);
     }
 

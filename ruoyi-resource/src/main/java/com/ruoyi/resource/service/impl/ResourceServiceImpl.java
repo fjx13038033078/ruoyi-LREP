@@ -29,8 +29,8 @@ public class ResourceServiceImpl implements ResourceService {
      * @return 资源列表
      */
     @Override
-    public List<Resource> getAllResources() {
-        List<Resource> allResources = resourceMapper.getAllResources();
+    public List<Resource> getAllResources(String keyword) {
+        List<Resource> allResources = resourceMapper.getAllResources(keyword);
         fillResourceInfo(allResources);
         return allResources;
     }

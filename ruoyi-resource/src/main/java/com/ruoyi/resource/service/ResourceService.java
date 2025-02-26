@@ -14,7 +14,7 @@ public interface ResourceService {
      *
      * @return 资源列表
      */
-    List<Resource> getAllResources();
+    List<Resource> getAllResources(String keyword);
 
     /**
      * 根据资源ID获取资源详情

@@ -1,10 +1,11 @@
 import request from '@/utils/request'
 
 // 获取资源列表
-export function listAllResources() {
+export function listAllResources(keyword) {
   return request({
     url: '/lerp/resource/listAll',
-    method: 'get'
+    method: 'get',
+    params: { keyword }
   })
 }
 
