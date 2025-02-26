@@ -61,6 +61,7 @@ public class RemarkServiceImpl implements RemarkService {
      */
     @Override
     public boolean addRemark(Remark remark) {
+        remark.setType(1);
         Long userId = SecurityUtils.getUserId();
         remark.setUserId(userId);
         remark.setRemarkTime(LocalDateTime.now());

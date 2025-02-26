@@ -11,6 +11,7 @@
         <result property="resourceId" column="resource_id"/>
         <result property="content" column="content"/>
         <result property="remarkTime" column="remark_time"/>
+        <result property="type" column="type"/>
     </resultMap>
 
     <!-- 获取所有评论 -->
