@@ -9,6 +9,7 @@
         <id property="remarkId" column="remark_id"/>
         <result property="userId" column="user_id"/>
         <result property="resourceId" column="resource_id"/>
+        <result property="noteId" column="note_id"/>
         <result property="content" column="content"/>
         <result property="remarkTime" column="remark_time"/>
         <result property="type" column="type"/>
@@ -24,6 +25,12 @@
         SELECT * FROM  lerp_remark WHERE resource_id = #{resourceId}
     </select>
 
+    <!-- 根据资源ID获取评论列表 -->
+    <select id="listRemarksByNoteId" parameterType="Long" resultMap="RemarkResult">
+        SELECT * FROM  lerp_remark WHERE note_id = #{noteId}
+    </select>
+
+
     <!-- 根据评论ID获取评论 -->
     <select id="getRemarkById" parameterType="Long" resultMap="RemarkResult">
         SELECT * FROM  lerp_remark WHERE remark_id = #{remarkId}
@@ -31,8 +38,8 @@
 
     <!-- 添加评论 -->
     <insert id="addRemark" parameterType="com.ruoyi.resource.domain.Remark">
-        INSERT INTO  lerp_remark (user_id, resource_id, content, remark_time)
-        VALUES (#{userId}, #{resourceId}, #{content}, #{remarkTime})
+        INSERT INTO  lerp_remark (user_id, resource_id, note_id, content, remark_time, type)
+        VALUES (#{userId}, #{resourceId}, #{noteId}, #{content}, #{remarkTime}, #{type})
     </insert>
 
     <!-- 删除评论 -->

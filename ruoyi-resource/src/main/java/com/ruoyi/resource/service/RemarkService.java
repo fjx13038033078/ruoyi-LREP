@@ -26,6 +26,14 @@ public interface RemarkService {
     List<Remark> listRemarksByResourceId(Long resourceId);
 
     /**
+     * 根据笔记ID获取评论列表
+     *
+     * @param noteId 笔记ID
+     * @return 评论列表
+     */
+    List<Remark> listRemarksByNoteId(Long noteId);
+
+    /**
      * 添加评论
      *
      * @param remark 待添加的评论信息

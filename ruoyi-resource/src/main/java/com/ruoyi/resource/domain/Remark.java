@@ -35,6 +35,8 @@ public class Remark implements Serializable {
 
     private Long resourceId;
 
+    private Long noteId;
+
     private String content;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

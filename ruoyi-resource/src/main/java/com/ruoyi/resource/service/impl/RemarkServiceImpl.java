@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -54,6 +55,23 @@ public class RemarkServiceImpl implements RemarkService {
     }
 
     /**
+     * 根据笔记ID获取评论列表
+     *
+     * @param noteId 笔记ID
+     * @return 评论列表
+     */
+    @Override
+    public List<Remark> listRemarksByNoteId(Long noteId) {
+        List<Remark> remarks = remarkMapper.listRemarksByNoteId(noteId);
+        for (Remark remark : remarks) {
+            Long userId = remark.getUserId();
+            String nickName = sysUserService.selectUserById(userId).getNickName();
+            remark.setUsername(nickName);
+        }
+        return remarks;
+    }
+
+    /**
      * 添加评论
      *
      * @param remark 评论信息
@@ -61,7 +79,6 @@ public class RemarkServiceImpl implements RemarkService {
      */
     @Override
     public boolean addRemark(Remark remark) {
-        remark.setType(1);
         Long userId = SecurityUtils.getUserId();
         remark.setUserId(userId);
         remark.setRemarkTime(LocalDateTime.now());

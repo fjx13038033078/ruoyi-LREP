@@ -9,12 +9,21 @@ export function listAllRemarks(query) {
   })
 }
 
-// 获取评论列表
+// 获取资源评论列表
 export function listRemarksByResourceId(resourceId) {
   return request({
     url: '/lerp/remark/list',
     method: 'get',
     params: { resourceId }
+  })
+}
+
+// 获取笔记评论列表
+export function listRemarksByNoteId(noteId) {
+  return request({
+    url: '/lerp/remark/listByNoteId',
+    method: 'get',
+    params: { noteId }
   })
 }
 

@@ -28,6 +28,14 @@ public interface RemarkMapper {
     List<Remark> listRemarksByResourceId(Long resourceId);
 
     /**
+     * 根据笔记ID获取评论列表
+     *
+     * @param noteId 笔记ID
+     * @return 评论列表
+     */
+    List<Remark> listRemarksByNoteId(Long noteId);
+
+    /**
      * 根据评论ID获取评论
      *
      * @param remarkId 评论ID

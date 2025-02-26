@@ -1,11 +1,14 @@
 package com.ruoyi.resource.service.impl;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.resource.domain.Note;
 import com.ruoyi.resource.mapper.NoteMapper;
 import com.ruoyi.resource.service.NoteService;
+import com.ruoyi.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -18,6 +21,8 @@ public class NoteServiceImpl implements NoteService {
 
     private final NoteMapper noteMapper;
 
+    private final ISysUserService iSysUserService;
+
     /**
      * 获取所有笔记
      *
@@ -25,7 +30,9 @@ public class NoteServiceImpl implements NoteService {
      */
     @Override
     public List<Note> getAllNotes() {
-        return noteMapper.getAllNotes();
+        List<Note> allNotes = noteMapper.getAllNotes();
+        fillNoteUsername(allNotes);
+        return allNotes;
     }
 
     /**
@@ -47,6 +54,9 @@ public class NoteServiceImpl implements NoteService {
      */
     @Override
     public boolean addNote(Note note) {
+        Long userId = SecurityUtils.getUserId();
+        note.setUserId(userId);
+        note.setCreatTime(LocalDateTime.now());
         int rows = noteMapper.addNote(note);
         return rows > 0;
     }
@@ -73,6 +83,14 @@ public class NoteServiceImpl implements NoteService {
     public boolean deleteNote(Long noteId) {
         int rows = noteMapper.deleteNote(noteId);
         return rows > 0;
+    }
+
+    private void fillNoteUsername(List<Note> notes) {
+        for (Note note : notes) {
+            Long userId = note.getUserId();
+            String username = iSysUserService.selectUserById(userId).getNickName();
+            note.setUsername(username);
+        }
     }
 
 }

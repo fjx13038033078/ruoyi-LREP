@@ -1,29 +1,27 @@
 <template>
   <div class="app-container">
-    <!-- 新增资源按钮 -->
+    <!-- 新增笔记按钮 -->
     <el-row :gutter="20" class="mb-20" style="margin-bottom: 20px;">
       <el-col>
-        <el-button type="primary" @click="handleAdd" v-hasPermi="['resource:resource:add']">新增资源</el-button>
+        <el-button type="primary" @click="handleAdd" v-hasPermi="['note:add']">新增笔记</el-button>
       </el-col>
     </el-row>
 
-    <!-- 资源列表 -->
-    <el-table :data="resourceList" v-loading="loading" border style="width: 100%">
-      <el-table-column label="资源ID" prop="resourceId" align="center"></el-table-column>
-      <el-table-column label="资源名称" prop="resourceName" align="center"></el-table-column>
-      <el-table-column label="资源描述" prop="description" align="center">
+    <!-- 笔记列表 -->
+    <el-table :data="noteList" v-loading="loading" border style="width: 100%">
+      <el-table-column label="笔记ID" prop="noteId" align="center"></el-table-column>
+      <el-table-column label="笔记标题" prop="title" align="center"></el-table-column>
+      <el-table-column label="笔记内容" prop="content" align="center">
         <template #default="scope">
-          <span>{{ scope.row.description.slice(0, 5) }}...</span>
+          <span>{{ scope.row.content.slice(0, 5) }}...</span>
         </template>
       </el-table-column>
-      <el-table-column label="上传者" prop="userName" align="center"></el-table-column>
       <el-table-column label="操作" align="center" width="400" fixed="right">
         <template #default="scope">
           <el-button type="info" size="mini" @click="handleView(scope.row)">查看</el-button>
           <el-button type="primary" size="mini" @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click="handleDelete(scope.row.resourceId)">删除</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope.row.noteId)">删除</el-button>
           <el-button type="warning" size="mini" @click="openRemarkDialog(scope.row)">评论</el-button>
-          <el-button type="success" size="mini" @click="handleAddFavorite(scope.row)">收藏</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -34,20 +32,17 @@
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
-      @pagination="fetchResources"
+      @pagination="fetchNotes"
     />
 
-    <!-- 添加/编辑资源对话框 -->
+    <!-- 添加/编辑笔记对话框 -->
     <el-dialog :visible.sync="dialogVisible" :title="dialogTitle" width="600px">
-      <el-form :model="resourceForm" label-width="100px" ref="resourceFormRef" :rules="rules">
-        <el-form-item label="资源名称" prop="resourceName">
-          <el-input v-model="resourceForm.resourceName"></el-input>
+      <el-form :model="noteForm" label-width="100px" ref="noteFormRef" :rules="rules">
+        <el-form-item label="笔记标题" prop="title">
+          <el-input v-model="noteForm.title"></el-input>
         </el-form-item>
-        <el-form-item label="资源描述" prop="description">
-          <el-input v-model="resourceForm.description" type="textarea" :rows="3"></el-input>
-        </el-form-item>
-        <el-form-item label="资源上传">
-          <FileUpload v-model="resourceForm.fileName"></FileUpload>
+        <el-form-item label="笔记内容" prop="content">
+          <el-input v-model="noteForm.content" type="textarea" :rows="3"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -56,17 +51,14 @@
       </div>
     </el-dialog>
 
-    <!-- 查看资源详情对话框 -->
-    <el-dialog :visible.sync="viewDialogVisible" title="资源详情" width="600px">
-      <el-form :model="viewResourceForm" label-width="100px">
-        <el-form-item label="资源名称">
-          <el-input v-model="viewResourceForm.resourceName" readonly></el-input>
+    <!-- 查看笔记详情对话框 -->
+    <el-dialog :visible.sync="viewDialogVisible" title="笔记详情" width="600px">
+      <el-form :model="viewNoteForm" label-width="100px">
+        <el-form-item label="笔记标题">
+          <el-input v-model="viewNoteForm.title" readonly></el-input>
         </el-form-item>
-        <el-form-item label="资源描述">
-          <el-input v-model="viewResourceForm.description" type="textarea" :rows="3" readonly></el-input>
-        </el-form-item>
-        <el-form-item label="附件查看">
-          <FileUpload v-model="viewResourceForm.fileName" :is-show-tip="false" :disabled="true"></FileUpload>
+        <el-form-item label="笔记内容">
+          <el-input v-model="viewNoteForm.content" type="textarea" :rows="3" readonly></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -99,15 +91,14 @@
 </template>
 
 <script>
-import { listAllResources, addResource, updateResource, deleteResource, getResourceById } from '@/api/resource/resource'
-import { listRemarksByResourceId, addRemark, deleteRemark } from '@/api/resource/remark'
-import {addFavorite} from "@/api/resource/favorite";
+import { listAllNotes, addNote, updateNote, deleteNote, getNoteById } from '@/api/resource/note'
+import { listRemarksByNoteId, addRemark, deleteRemark } from '@/api/resource/remark'
 
 export default {
   data() {
     return {
       loading: true,
-      resourceList: [],
+      noteList: [],
       total: 0,
       queryParams: {
         pageNum: 1,
@@ -115,94 +106,93 @@ export default {
       },
       dialogVisible: false,
       dialogTitle: '',
-      resourceForm: {
-        resourceId: null,
-        resourceName: '',
-        description: '',
-        fileName: ''
+      noteForm: {
+        noteId: null,
+        title: '',
+        content: ''
       },
       viewDialogVisible: false,
-      viewResourceForm: {
-        resourceName: '',
-        resourceDescription: ''
+      viewNoteForm: {
+        title: '',
+        content: ''
       },
       remarkDialogVisible: false,
-      selectedResource: {},
+      selectedNote: {},
       remarks: [],
       newRemark: '',
       rules: {
-        resourceName: [{ required: true, message: '请输入资源名称', trigger: 'blur' }],
-        resourceDescription: [{ required: true, message: '请输入资源描述', trigger: 'blur' }]
+        title: [{ required: true, message: '请输入笔记标题', trigger: 'blur' }],
+        content: [{ required: true, message: '请输入笔记内容', trigger: 'blur' }]
       }
     }
   },
   created() {
-    this.fetchResources()
+    this.fetchNotes()
   },
   methods: {
-    // 获取资源列表
-    fetchResources() {
+    // 获取笔记列表
+    fetchNotes() {
       this.loading = true
-      listAllResources().then(response => {
-        this.resourceList = response.rows
+      listAllNotes().then(response => {
+        this.noteList = response.rows
         this.total = response.total
         this.loading = false
       })
     },
-    // 打开新增资源对话框
+    // 打开新增笔记对话框
     handleAdd() {
       this.resetForm()
-      this.dialogTitle = '新增资源'
+      this.dialogTitle = '新增笔记'
       this.dialogVisible = true
     },
-    // 编辑资源
+    // 编辑笔记
     handleEdit(row) {
-      getResourceById(row.resourceId).then(response => {
-        this.resourceForm = { ...response.data }
-        this.dialogTitle = '编辑资源'
+      getNoteById(row.noteId).then(response => {
+        this.noteForm = { ...response.data }
+        this.dialogTitle = '编辑笔记'
         this.dialogVisible = true
       })
     },
     // 提交表单
     submitForm() {
-      this.$refs.resourceFormRef.validate(valid => {
+      this.$refs.noteFormRef.validate(valid => {
         if (valid) {
-          if (this.resourceForm.resourceId) {
-            updateResource(this.resourceForm).then(() => {
+          if (this.noteForm.noteId) {
+            updateNote(this.noteForm).then(() => {
               this.$message.success('更新成功')
-              this.fetchResources()
+              this.fetchNotes()
               this.dialogVisible = false
             })
           } else {
-            addResource(this.resourceForm).then(() => {
+            addNote(this.noteForm).then(() => {
               this.$message.success('新增成功')
-              this.fetchResources()
+              this.fetchNotes()
               this.dialogVisible = false
             })
           }
         }
       })
     },
-    // 删除资源
-    handleDelete(resourceId) {
-      this.$confirm('确定要删除该资源吗？', '提示', { type: 'warning' }).then(() => {
-        deleteResource(resourceId).then(() => {
+    // 删除笔记
+    handleDelete(noteId) {
+      this.$confirm('确定要删除该笔记吗？', '提示', { type: 'warning' }).then(() => {
+        deleteNote(noteId).then(() => {
           this.$message.success('删除成功')
-          this.fetchResources()
+          this.fetchNotes()
         })
       })
     },
-    // 查看资源详情
+    // 查看笔记详情
     handleView(row) {
-      getResourceById(row.resourceId).then(response => {
-        this.viewResourceForm = { ...response.data }
+      getNoteById(row.noteId).then(response => {
+        this.viewNoteForm = { ...response.data }
         this.viewDialogVisible = true
       })
     },
     // 打开评论对话框并加载评论列表
     openRemarkDialog(row) {
-      this.selectedResource = row
-      listRemarksByResourceId(row.resourceId).then(response => {
+      this.selectedNote = row
+      listRemarksByNoteId(row.noteId).then(response => {
         this.remarks = response.data
         this.remarkDialogVisible = true
       })
@@ -215,9 +205,9 @@ export default {
         return
       }
       const remarkData = {
-        resourceId: this.selectedResource.resourceId,
+        noteId: this.selectedNote.noteId,
         content: reviewRemark,
-        type: 1
+        type: 2
       }
       addRemark(remarkData).then(() => {
         this.$message.success('评论成功')
@@ -234,22 +224,13 @@ export default {
     },
     // 重置表单
     resetForm() {
-      this.resourceForm = {
-        resourceId: null,
-        resourceName: '',
-        resourceDescription: ''
+      this.noteForm = {
+        noteId: null,
+        title: '',
+        content: ''
       }
-      this.$refs.resourceFormRef?.resetFields()
-    },
-    // 收藏资源
-    handleAddFavorite(row) {
-      const favoriteData = {
-        resourceId: row.resourceId
-      };
-      addFavorite(favoriteData).then(() => {
-        this.$message.success('资源收藏成功');
-      });
-    },
+      this.$refs.noteFormRef?.resetFields()
+    }
   }
 }
 </script>

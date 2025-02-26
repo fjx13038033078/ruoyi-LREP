@@ -33,9 +33,25 @@ public class RemarkController extends BaseController {
         return getDataTable(remarks);
     }
 
+    /**
+     * 获取所有资源评论列表
+     *
+     * @return 评论列表
+     */
     @GetMapping("/list")
     public AjaxResult listRemarksByResourceId(@RequestParam Long resourceId) {
         List<Remark> remarks = remarkService.listRemarksByResourceId(resourceId);
+        return success(remarks);
+    }
+
+    /**
+     * 获取所有评论列表
+     *
+     * @return 评论列表
+     */
+    @GetMapping("/listByNoteId")
+    public AjaxResult listRemarksByNoteId(@RequestParam Long noteId) {
+        List<Remark> remarks = remarkService.listRemarksByNoteId(noteId);
         return success(remarks);
     }
 

@@ -10,6 +10,7 @@
         <result property="title" column="title"/>
         <result property="content" column="content"/>
         <result property="userId" column="user_id"/>
+        <result property="creatTime" column="creat_time"/>
     </resultMap>
 
     <!-- 获取所有笔记 -->
@@ -24,8 +25,8 @@
 
     <!-- 添加笔记 -->
     <insert id="addNote" parameterType="com.ruoyi.resource.domain.Note">
-        INSERT INTO lerp_note (title, content, user_id)
-        VALUES (#{title}, #{content}, #{userId})
+        INSERT INTO lerp_note (title, content, user_id, creat_time)
+        VALUES (#{title}, #{content}, #{userId}, #{creatTime})
     </insert>
 
     <!-- 更新笔记 -->
