@@ -17,14 +17,14 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      if (store.getters.roles.length === 0) {
+      if (!store.getters.roles || store.getters.roles.length === 0) {
         // 判断当前用户是否已拉取完user_info信息
         store.dispatch('user/getInfo').then(() => {
           next({ ...to, replace: true })
         }).catch(err => {
           store.dispatch('user/logout').then(() => {
-            Message.error(err)
-            next({ path: '/' })
+            Message.error(err.message || '获取用户信息失败')
+            next({ path: '/login' })
           })
         })
       } else {

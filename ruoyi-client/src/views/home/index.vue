@@ -37,8 +37,8 @@
           <div class="user-info" v-if="token">
             <el-dropdown trigger="click" @command="handleCommand">
               <span class="el-dropdown-link">
-                <el-avatar :size="32" :src="avatar"></el-avatar>
-                <span class="username">{{ name }}</span>
+                <el-avatar :size="32" :src="userAvatar"></el-avatar>
+                <span class="username">{{ userName }}</span>
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
@@ -170,6 +170,7 @@ export default {
     return {
       activeIndex: '1',
       searchText: '',
+      defaultAvatar: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
       categories: [
         { name: '编程开发', icon: 'el-icon-s-opportunity', count: 128 },
         { name: '设计创意', icon: 'el-icon-picture', count: 85 },
@@ -191,11 +192,26 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      token: 'user/token',
-      avatar: 'user/avatar',
-      name: 'user/name'
-    })
+    ...mapGetters([
+      'token',
+      'avatar',
+      'name',
+      'roles'
+    ]),
+    // 确保有可用的头像
+    userAvatar() {
+      return this.avatar || this.defaultAvatar;
+    },
+    // 确保有可用的用户名
+    userName() {
+      return this.name || '用户';
+    }
+  },
+  created() {
+    // 如果有token但没有用户信息，尝试获取用户信息
+    if (this.token && (!this.name || !this.roles.length)) {
+      this.$store.dispatch('user/getInfo');
+    }
   },
   methods: {
     handleSelect(key, keyPath) {

@@ -124,10 +124,12 @@ export default {
           this.$store
             .dispatch("user/login", this.loginForm)
             .then(() => {
+              this.$message.success('登录成功');
               this.$router.push({ path: this.redirect || "/" });
               this.loading = false;
             })
-            .catch(() => {
+            .catch(error => {
+              this.$message.error(error.message || '登录失败，请重试');
               this.loading = false;
               this.getCode();
             });

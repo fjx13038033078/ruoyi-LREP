@@ -38,6 +38,9 @@ const user = {
       const uuid = userInfo.uuid
       return new Promise((resolve, reject) => {
         login(username, password, code, uuid).then(res => {
+          if (!res || !res.token) {
+            return reject('登录失败，未获取到有效token');
+          }
           setToken(res.token)
           commit('SET_TOKEN', res.token)
           resolve()
@@ -51,21 +54,32 @@ const user = {
     getInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getInfo().then(res => {
-          const user = res.user
-          const avatar = user.avatar || "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png";
-          if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', res.roles)
-            commit('SET_PERMISSIONS', res.permissions)
-          } else {
-            commit('SET_ROLES', ['ROLE_DEFAULT'])
+          if (!res) {
+            return reject('获取用户信息失败');
           }
-          commit('SET_NAME', user.userName)
-          commit('SET_AVATAR', avatar)
-          resolve(res)
+          
+          const user = res.user || {};
+          // 使用默认头像URL而不是本地文件
+          const avatar = user.avatar || "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png";
+          
+          // 设置角色和权限
+          const roles = res.roles || [];
+          const permissions = res.permissions || [];
+          
+          if (roles && roles.length > 0) {
+            commit('SET_ROLES', roles);
+            commit('SET_PERMISSIONS', permissions);
+          } else {
+            commit('SET_ROLES', ['ROLE_DEFAULT']);
+          }
+          
+          commit('SET_NAME', user.userName || '');
+          commit('SET_AVATAR', avatar);
+          resolve(res);
         }).catch(error => {
-          reject(error)
-        })
-      })
+          reject(error);
+        });
+      });
     },
     
     // 退出系统
